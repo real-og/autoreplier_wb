@@ -39,8 +39,9 @@ if __name__ == '__main__':
                 continue
                 
             parsed_feedback = utils.parse_feedback(feedback)
+            message_to_send = utils.compose_message(feedback)
 
-            message_id = sender.send_text_message(json.dumps(parsed_feedback, ensure_ascii=False))
+            message_id = sender.send_text_message(message_to_send)
             if auth == config.WB_TOKEN_OOO:
                 account = 'OOO'
             elif auth == config.WB_TOKEN_IP:

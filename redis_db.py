@@ -12,3 +12,6 @@ def get_all_redis():
     raw_items = redis_client.lrange(key, 0, -1)         
     items = [json.loads(x) for x in raw_items]
     return items
+
+def clear_list():
+    redis_client.delete(key)
