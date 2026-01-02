@@ -7,6 +7,7 @@ import keyboards as kb
 from config import BOT_TOKEN, GROUP_ID, WB_TOKEN_IP, WB_TOKEN_OOO
 import wb_api
 import redis_db
+import settings
 
 
 
@@ -23,6 +24,24 @@ dp = Dispatcher(bot, storage=storage)
 @dp.message_handler(commands=['start'], state="*")
 async def send_welcome(message: types.Message):
     await message.answer('pong')
+
+
+@dp.message_handler(commands=['get_settings'], state="*")
+async def send_welcome(message: types.Message):
+    await message.answer(''.join(settings.INSTRUCTIONS))
+
+@dp.message_handler(commands=['set_settings'], state="*")
+async def send_welcome(message: types.Message):
+    await message.answer('Замена токенов и промптов')
+
+@dp.message_handler(commands=['logs'], state="*")
+async def send_welcome(message: types.Message):
+    await message.answer_document(types.InputFile("log.txt"))
+
+@dp.message_handler(commands=['help'], state="*")
+async def send_welcome(message: types.Message):
+    await message.answer('Инструкция скоро')
+    
 
 
 @dp.callback_query_handler(state='*')
@@ -56,7 +75,14 @@ async def send_series(callback: types.CallbackQuery):
     
     await bot.answer_callback_query(callback.id)
 
-
+async def on_startup(_):
+    await bot.set_my_commands([
+        types.BotCommand("start", "Запуск"),
+        types.BotCommand("help", "Помощь"),
+        types.BotCommand("logs", "Логи"),
+        types.BotCommand("get_settings", "Посмотреть настройки"),
+        types.BotCommand("set_settings", "Установить настройки"),
+    ])
 
 if __name__ == '__main__':
     print("Starting autoreplier tg bot")

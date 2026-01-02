@@ -4,6 +4,7 @@ from openai import OpenAI
 import config
 import json
 from openai import OpenAI
+from settings import INSTRUCTIONS
 
 
 
@@ -14,13 +15,7 @@ http_client = httpx.Client(
 
 client = OpenAI(api_key=config.GPT_KEY, http_client=http_client)
 
-INSTRUCTIONS = (
-    "Ты — служба поддержки продавца на Wildberries. "
-    "Сгенерируй ВЕЖЛИВЫЙ, КОРОТКИЙ ответ продавца на отзыв покупателя на русском. "
-    "Правила: 1-3 предложения, без ссылок, без обещаний того, чего не знаешь, без 'мы лучшие'. "
-    "Если отзыв пустой и 5★ — просто поблагодари и пожелай приятного пользования. "
-    "Если есть 'cons' или низкая оценка — извинись, уточни проблему, предложи написать в поддержку/вопросы в WB."
-)
+
 
 SCHEMA = {
     "type": "object",
