@@ -24,5 +24,7 @@ def answer_feedback___(auth, id: str, text: str):
 
 
 def answer_feedback_mock(auth, id: str, text: str):
-    print('ОТПРАВИЛ ОТЗЫВы')
+    print(auth)
+    print(id)
+    print(text)
     return 204
