@@ -64,7 +64,7 @@ async def send_series(callback: types.CallbackQuery):
             auth = WB_TOKEN_OOO
         elif item_to_ans['account'] == 'IP':
             auth = WB_TOKEN_IP
-        wb_api.answer_feedback_mock(auth, item_to_ans['feedback_id'], callback.message.text)
+        wb_api.answer_feedback(auth, item_to_ans['feedback_id'], callback.message.text)
         try:
             await bot.edit_message_reply_markup(GROUP_ID, message_id, reply_markup=kb.done_kb)
         except Exception as e:
