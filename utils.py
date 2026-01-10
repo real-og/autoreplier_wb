@@ -50,30 +50,30 @@ def compose_message(feedback: dict) -> str:
     answer = feedback.get("answer")
     answered = "✅ Есть ответ" if answer else "❌ Нет ответа"
 
-    parts = [
-        f"🆕 *Новый отзыв WB*  {answered}",
-        f"⭐️ Оценка: *{rating}*    🕒 {created_str}",
+    parts = [ 
+        f"Время: <b>{created_str}</b>",
         "",
-        f"👤 Покупатель: *{user}*",
-        f"🛍 Товар: *{product_name}*",
-        f"🏷 Бренд: {brand}",
-        f"📦 Артикул продавца: `{supplier_article}`",
-        f"📚 Категория: {subject}",
-        f"🎨 Цвет: {color}",
-        f"🏷 Теги: {tags}",
-        f"🖼 Фото: {photos_count}",
+        f"Товар: <b>{product_name}</b>",
         "",
+        f"Артикул продавца: <b>{supplier_article}</b>",
+        "",
+        f"Покупатель: <b>{user}</b>",
+        f"Фото: <b>{photos_count}</b>", 
+        "",
+        f"Оценка: <b>{rating}</b>", 
+        f"Теги: <b>{tags}</b>",   
+        ""   
     ]
 
     if text:
-        parts += [f"💬 Текст: {text}"]
+        parts += [f"Текст: <b>{text}</b>"]
     if pros:
-        parts += [f"✅ Плюсы: {pros}"]
+        parts += [f"Плюсы: <b>{pros}</b>"]
     if cons:
-        parts += [f"⚠️ Минусы: {cons}"]
+        parts += [f"Минусы: <b>{cons}</b>"]
 
     if not text and not pros and not cons:
-        parts += ["💬 Отзыв без текста."]
+        parts += ["Отзыв без текста"]
 
-    parts += ["", f"🆔 ID: `{fb_id}`"]
+    parts += ["", f"ID: <i>{fb_id}</i>"]
     return "\n".join(parts)
