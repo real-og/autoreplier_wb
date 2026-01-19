@@ -9,7 +9,7 @@ from settings import INSTRUCTIONS
 
 
 http_client = httpx.Client(
-    proxy=config.PROXY,          # актуальный параметр в новых httpx
+    proxy=config.PROXY,         
     timeout=60.0,
 )
 

@@ -2,13 +2,17 @@ from aiogram import types
 from aiogram import executor
 from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.dispatcher import FSMContext
+from aiogram.types import ReplyKeyboardRemove
 import logging
+from states import State
 import keyboards as kb
 from config import BOT_TOKEN, GROUP_ID, WB_TOKEN_IP, WB_TOKEN_OOO
 import wb_api
 import redis_db
 import settings
-
+import texts
+import buttons
 
 
 logging.basicConfig(level=logging.WARNING)
@@ -29,11 +33,27 @@ async def send_welcome(message: types.Message):
 
 @dp.message_handler(commands=['get_settings'], state="*")
 async def send_welcome(message: types.Message):
-    await message.answer(''.join(settings.INSTRUCTIONS))
+    await message.answer(settings.INSTRUCTIONS)
+
 
 @dp.message_handler(commands=['set_settings'], state="*")
 async def send_welcome(message: types.Message):
-    await message.answer('Замена токенов и промптов')
+    await message.answer(settings.INSTRUCTIONS)
+    await message.answer(texts.change_instructions, reply_markup=kb.cancel_kb)
+    await State.changing_instructions.set()
+
+@dp.message_handler(state=State.changing_instructions)
+async def send_welcome(message: types.Message, state: FSMContext):
+    if message.text.lower().strip() == buttons.cancel.lower().strip():
+        await message.answer(texts.back_to_menu, reply_markup=ReplyKeyboardRemove())
+    elif message.text:
+        settings.INSTRUCTIONS = message.text
+        await message.answer(texts.success_instruction_change)
+        await message.answer(texts.back_to_menu, reply_markup=ReplyKeyboardRemove())
+    await state.reset_state(with_data=False)
+
+    
+
 
 @dp.message_handler(commands=['logs'], state="*")
 async def send_welcome(message: types.Message):
