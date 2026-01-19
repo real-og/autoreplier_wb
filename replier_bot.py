@@ -24,6 +24,7 @@ dp = Dispatcher(bot, storage=storage)
 @dp.message_handler(commands=['start'], state="*")
 async def send_welcome(message: types.Message):
     await message.answer('pong')
+    print(message)
 
 
 @dp.message_handler(commands=['get_settings'], state="*")

@@ -4,3 +4,4 @@ Pipfile.lock
 __pycache__
 test.py
 nohup.out
+readme_private.txt
