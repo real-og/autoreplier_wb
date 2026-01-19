@@ -26,12 +26,14 @@ SCHEMA = {
     "additionalProperties": False
 }
 
-def get_reply(payload: dict) -> str:
+def get_reply(payload: dict | str) -> str:
+    if isinstance(payload, dict):
+        payload = json.dumps(payload, ensure_ascii=False)
 
     resp = client.responses.create(
         model="gpt-5-mini",
         instructions=INSTRUCTIONS,
-        input="Данные отзыва (JSON):\n" + json.dumps(payload, ensure_ascii=False),
+        input="Данные отзыва:\n" + payload,
         max_output_tokens=1000,
         text={
             "format": {

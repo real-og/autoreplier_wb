@@ -13,6 +13,7 @@ import redis_db
 import settings
 import texts
 import buttons
+import gpt_generator
 
 
 logging.basicConfig(level=logging.WARNING)
@@ -53,7 +54,12 @@ async def send_welcome(message: types.Message, state: FSMContext):
     await state.reset_state(with_data=False)
 
     
-
+@dp.message_handler(commands=['test'], state="*")
+async def send_welcome(message: types.Message):
+    feedback_to_test = message.get_args()
+    answer = gpt_generator.get_reply(feedback_to_test)
+    await message.answer(answer)
+    
 
 @dp.message_handler(commands=['logs'], state="*")
 async def send_welcome(message: types.Message):
