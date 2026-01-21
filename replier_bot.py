@@ -59,6 +59,38 @@ async def send_welcome(message: types.Message):
     feedback_to_test = message.get_args()
     answer = gpt_generator.get_reply(feedback_to_test)
     await message.answer(answer)
+
+
+@dp.message_handler(commands=['set_automod'], state="*")
+async def send_welcome(message: types.Message):
+    selected_rates = redis_db.get_selected_rates()
+    await message.answer(texts.automod_changing, reply_markup=kb.get_automod_kb(selected_rates))
+    await State.choosing_automod.set()
+
+
+@dp.callback_query_handler(state=State.choosing_automod)
+async def send_series(callback: types.CallbackQuery, state: FSMContext):
+    if callback.data == 'menu':
+        await callback.message.answer(texts.back_to_menu, reply_markup=ReplyKeyboardRemove())
+        await state.reset_state(with_data=False)
+        return
+
+    tapped_num = int(callback.data)
+    selected_numbers = redis_db.get_selected_rates()
+
+    if tapped_num in selected_numbers:
+        selected_numbers.remove(tapped_num)
+    else:
+        selected_numbers.append(tapped_num)
+
+    try:
+        await bot.edit_message_reply_markup(callback.message.chat.id,
+                            callback.message.message_id,
+                            reply_markup=kb.get_automod_kb(selected_numbers))
+    except:
+        print('Фейл во время попытки изменить клавиатуру с кодом')
+    redis_db.set_selected_rates(selected_numbers)
+    await bot.answer_callback_query(callback.id)
     
 
 @dp.message_handler(commands=['logs'], state="*")
@@ -78,6 +110,9 @@ async def send_series(callback: types.CallbackQuery):
     print(tapped)
     print(message_id)
 
+    
+
+
 
     all = redis_db.get_all_redis()
     item_to_ans = None
@@ -85,8 +120,12 @@ async def send_series(callback: types.CallbackQuery):
         if item['reply_message_id'] == message_id:
             item_to_ans = item
             break
+
+    if tapped == 'regenerate':
+        print(item_to_ans)
+        
     
-    if item_to_ans:
+    if item_to_ans and (tapped == 'sent'):
         if item_to_ans['account'] == 'OOO':
             auth = WB_TOKEN_OOO
         elif item_to_ans['account'] == 'IP':
