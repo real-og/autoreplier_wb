@@ -27,6 +27,10 @@ done_kb = InlineKeyboardMarkup()
 button_1 = InlineKeyboardButton(text='Готово ✅', callback_data='done')
 done_kb.row(button_1)
 
+done_auto_kb = InlineKeyboardMarkup()
+button_1 = InlineKeyboardButton(text='Готово ✅🤖', callback_data='done')
+done_auto_kb.row(button_1)
+
 
 
 

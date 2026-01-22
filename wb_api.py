@@ -13,7 +13,9 @@ def get_feedbacks(auth):
     return response
 
 
-def answer_feedback___(auth, id: str, text: str):
+# auth - wb token; id - message id with feedback (not answer)
+def answer_feedback(auth, id: str, text: str):
+    print("WARNING!!!!!!!")
     url = 'api/v1/feedbacks/answer'
     headers = {'Authorization': auth,
                'Content-Type': 'application/json'}
@@ -24,6 +26,7 @@ def answer_feedback___(auth, id: str, text: str):
 
 
 def answer_feedback_mock(auth, id: str, text: str):
+    print('mock answer')
     print(auth)
     print(id)
     print(text)
