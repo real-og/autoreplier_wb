@@ -32,6 +32,15 @@ button_1 = InlineKeyboardButton(text='Готово ✅🤖', callback_data='done
 done_auto_kb.row(button_1)
 
 
+error_kb = InlineKeyboardMarkup()
+button_1 = InlineKeyboardButton(text='Ошибка поиска ❗️', callback_data='error')
+done_auto_kb.row(button_1)
+
+done_by_hand = InlineKeyboardMarkup()
+button_1 = InlineKeyboardButton(text='Уже отвечено на WB ⚠️', callback_data='warning')
+done_by_hand.row(button_1)
+
+
 
 
 cancel_kb = ReplyKeyboardMarkup([[buttons.cancel]],

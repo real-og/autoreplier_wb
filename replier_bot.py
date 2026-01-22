@@ -117,15 +117,35 @@ async def send_series(callback: types.CallbackQuery):
             item_to_ans = item
             break
 
-    if tapped == 'regenerate':
-        print(item_to_ans)
+
+    if tapped == 'sent':
+
+        # not found in redis
+        if item_to_ans is None:
+            try:
+                await bot.edit_message_reply_markup(GROUP_ID, message_id, reply_markup=kb.error_kb)
+            except Exception as e:
+                print('Ошибка при изменении кнопки')
+            await bot.answer_callback_query(callback.id, text='Ошибка при поиске отзыва')
+            return
         
-    
-    if item_to_ans and (tapped == 'sent'):
+
         if item_to_ans['account'] == 'OOO':
             auth = WB_TOKEN_OOO
         elif item_to_ans['account'] == 'IP':
             auth = WB_TOKEN_IP
+
+        # already answered
+        wb_feedback = wb_api.get_feedback_by_id(auth, item_to_ans['feedback_id'])
+        if wb_feedback.json()['data']['answer'] is not None:
+            try:
+                await bot.edit_message_reply_markup(GROUP_ID, message_id, reply_markup=kb.done_by_hand)
+            except Exception as e:
+                print('уже отвечено')
+            await bot.answer_callback_query(callback.id, text='уже отвечено')
+            return
+        
+
         wb_api.answer_feedback_mock(auth, item_to_ans['feedback_id'], callback.message.text)
         try:
             await bot.edit_message_reply_markup(GROUP_ID, message_id, reply_markup=kb.done_kb)
@@ -133,6 +153,10 @@ async def send_series(callback: types.CallbackQuery):
             print('Ошибка при изменении кнопки')
     else:
         await bot.answer_callback_query(callback.id, text='Ошибка при поиске отзыва')
+
+
+    if tapped == 'regenerate':
+        print(item_to_ans)
 
     
     await bot.answer_callback_query(callback.id)
