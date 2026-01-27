@@ -4,16 +4,19 @@ from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 from aiogram.types import ReplyKeyboardRemove
+
 import logging
+
 from states import State
 import keyboards as kb
-from config import BOT_TOKEN, GROUP_ID, WB_TOKEN_IP, WB_TOKEN_OOO
+from config import BOT_TOKEN, GROUP_ID, WB_TOKEN_IP, WB_TOKEN_OOO, PROXY, GPT_KEY
 import wb_api
 import redis_db
 import settings
 import texts
 import buttons
 import gpt_generator
+import diagnostics
 
 
 logging.basicConfig(level=logging.WARNING)
@@ -30,6 +33,18 @@ dp = Dispatcher(bot, storage=storage)
 async def send_welcome(message: types.Message):
     await message.answer(texts.back_to_menu)
     print(message)
+
+
+@dp.message_handler(commands=['diagnostics'], state="*")
+async def send_welcome(message: types.Message):
+    await message.answer(texts.diagnos_wait)
+    proxy_check = diagnostics.check_proxy(PROXY)
+    openai_check = diagnostics.check_openai(PROXY, GPT_KEY)
+    wb_ooo_check = diagnostics.check_wb(WB_TOKEN_OOO)
+    wb_ip_check = diagnostics.check_wb(WB_TOKEN_IP)
+    await message.answer(texts.diagnos_result(proxy_check, openai_check, [wb_ooo_check, wb_ip_check]))
+
+    
 
 
 @dp.message_handler(commands=['get_settings'], state="*")
