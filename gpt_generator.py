@@ -46,17 +46,16 @@ def get_reply(payload: dict | str) -> str:
 
     raw = resp.output_text
 
-    print("status:", getattr(resp, "status", None))
-    print("error:", getattr(resp, "error", None))
-    print("incomplete_details:", getattr(resp, "incomplete_details", None))
-    print("output_len:", len(getattr(resp, "output", []) or []))
-    print("raw repr:", repr(raw))
+    usage = getattr(resp, "usage", None)
+    total_used = None
+    if usage:
+        total_used = usage.total_tokens
     if not raw or not raw.strip():
         print(resp.model_dump_json(indent=2, ensure_ascii=False))
         raise RuntimeError("Empty output_text (no output_text blocks in response)")
     
     data = json.loads(resp.output_text)
-    return data["answer"].strip()
+    return data["answer"].strip(), total_used
 
 
 

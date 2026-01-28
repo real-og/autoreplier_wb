@@ -1,19 +1,12 @@
 from aiogram import types
-from aiogram import executor
-from aiogram import Bot, Dispatcher
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 from aiogram.types import ReplyKeyboardRemove
 import traceback
-import logging
-
 from states import State
 import keyboards as kb
 import wb_api
 import redis_db
-import settings
 import texts
-import buttons
 import gpt_generator
 import diagnostics
 import datetime
@@ -43,14 +36,14 @@ async def send_welcome(message: types.Message):
 async def send_welcome(message: types.Message):
     feedback_to_test = message.get_args()
     try:
-        answer = gpt_generator.get_reply(feedback_to_test)
+        answer, total_tokens_used = gpt_generator.get_reply(feedback_to_test)
     except Exception as e:
             ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             print('EXCEPTION /test from the bot')
             print(ts)
             print(traceback.format_exc())
             await message.answer(texts.error_alert)
-    await message.answer(answer)
+    await message.answer(answer + f'\n\n<i>Суммарно использовано {total_tokens_used}</i>')
 
 
 @dp.message_handler(commands=['set_automod'], state="*")

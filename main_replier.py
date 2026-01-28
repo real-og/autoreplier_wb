@@ -51,8 +51,8 @@ if __name__ == '__main__':
                 elif auth == config_io.get_value('WB_TOKEN_IP'):
                     account = 'IP'
 
-                reply_gpt = gpt_generator.get_reply(parsed_feedback)
-                reply_id = bot_outer_interface.send_text_message(reply_gpt, kb.to_send_kb)
+                reply_gpt, total_used_tokens = gpt_generator.get_reply(parsed_feedback)
+                reply_id = bot_outer_interface.send_text_message(reply_gpt + f'\n\n<i>Суммарно использовано {total_used_tokens}</i>', kb.to_send_kb)
 
                 redis_db.add_redis({'timestamp': int(time.time()),
                                 'feedback_id': feedback['id'],
