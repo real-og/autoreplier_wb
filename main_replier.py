@@ -10,6 +10,7 @@ import wb_api
 import redis_db
 import traceback
 from datetime import datetime
+import texts
 
 
 
@@ -74,6 +75,7 @@ if __name__ == '__main__':
             print('EXCEPTION MAIN_REPLIER')
             print(ts)
             print(traceback.format_exc())
+            bot_outer_interface.send_text_message(texts.error_alert)
             time.sleep(EXCEPTION_TIMEOUT)
         
 

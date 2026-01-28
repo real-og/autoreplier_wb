@@ -4,7 +4,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 from aiogram.types import ReplyKeyboardRemove
-
+import traceback
 import logging
 
 from states import State
@@ -17,6 +17,7 @@ import texts
 import buttons
 import gpt_generator
 import diagnostics
+import datetime
 
 
 logging.basicConfig(level=logging.WARNING)
@@ -39,7 +40,7 @@ async def send_welcome(message: types.Message):
 async def send_welcome(message: types.Message):
     await message.answer(texts.diagnos_wait)
     proxy_check = diagnostics.check_proxy(PROXY)
-    openai_check = diagnostics.check_openai(PROXY, GPT_KEY)
+    openai_check = diagnostics.check_openai_via_proxy(PROXY, GPT_KEY)
     wb_ooo_check = diagnostics.check_wb(WB_TOKEN_OOO)
     wb_ip_check = diagnostics.check_wb(WB_TOKEN_IP)
     await message.answer(texts.diagnos_result(proxy_check, openai_check, [wb_ooo_check, wb_ip_check]))
@@ -72,7 +73,14 @@ async def send_welcome(message: types.Message, state: FSMContext):
 @dp.message_handler(commands=['test'], state="*")
 async def send_welcome(message: types.Message):
     feedback_to_test = message.get_args()
-    answer = gpt_generator.get_reply(feedback_to_test)
+    try:
+        answer = gpt_generator.get_reply(feedback_to_test)
+    except Exception as e:
+            ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            print('EXCEPTION /test from the bot')
+            print(ts)
+            print(traceback.format_exc())
+            await message.answer(texts.error_alert)
     await message.answer(answer)
 
 
