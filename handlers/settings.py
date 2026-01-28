@@ -24,7 +24,7 @@ Id группы: {utils.short_tail(config_io.get_value('GROUP_ID'))}\n\n"""
 @dp.message_handler(commands=['set_openai'], state="*")
 async def send_welcome(message: types.Message):
     await message.answer(f"Токен openAI: {utils.short_tail(config_io.get_value('GPT_KEY'))}")
-    await message.answer(texts.change_instructions, reply_markup=kb.cancel_kb)
+    await message.answer(texts.change_setting, reply_markup=kb.cancel_kb)
     await State.changing_openai.set()
 
 @dp.message_handler(state=State.changing_openai)
@@ -42,7 +42,7 @@ async def send_welcome(message: types.Message, state: FSMContext):
 @dp.message_handler(commands=['set_group_id'], state="*")
 async def send_welcome(message: types.Message):
     await message.answer(f"id группы: {utils.short_tail(config_io.get_value('GROUP_ID'))}")
-    await message.answer(texts.change_instructions, reply_markup=kb.cancel_kb)
+    await message.answer(texts.change_setting, reply_markup=kb.cancel_kb)
     await State.changing_group.set()
 
 @dp.message_handler(state=State.changing_group)
@@ -60,7 +60,7 @@ async def send_welcome(message: types.Message, state: FSMContext):
 @dp.message_handler(commands=['set_proxy'], state="*")
 async def send_welcome(message: types.Message):
     await message.answer(f"Прокси: {utils.short_tail(config_io.get_value('PROXY'))}")
-    await message.answer(texts.change_instructions, reply_markup=kb.cancel_kb)
+    await message.answer(texts.change_setting, reply_markup=kb.cancel_kb)
     await State.changing_proxy.set()
 
 @dp.message_handler(state=State.changing_proxy)
@@ -78,7 +78,7 @@ async def send_welcome(message: types.Message, state: FSMContext):
 @dp.message_handler(commands=['set_wb_ooo'], state="*")
 async def send_welcome(message: types.Message):
     await message.answer(f"Токен вб ООО: {utils.short_tail(config_io.get_value('WB_TOKEN_OOO'))}")
-    await message.answer(texts.change_instructions, reply_markup=kb.cancel_kb)
+    await message.answer(texts.change_setting, reply_markup=kb.cancel_kb)
     await State.changing_wb_ooo.set()
 
 @dp.message_handler(state=State.changing_wb_ooo)
@@ -96,7 +96,7 @@ async def send_welcome(message: types.Message, state: FSMContext):
 @dp.message_handler(commands=['set_wb_ip'], state="*")
 async def send_welcome(message: types.Message):
     await message.answer(f"Токен вб ИП: {utils.short_tail(config_io.get_value('WB_TOKEN_IP'))}")
-    await message.answer(texts.change_instructions, reply_markup=kb.cancel_kb)
+    await message.answer(texts.change_setting, reply_markup=kb.cancel_kb)
     await State.changing_wb_ip.set()
 
 @dp.message_handler(state=State.changing_wb_ip)

@@ -7,4 +7,5 @@ class State(StatesGroup):
     changing_wb_ooo = State()
     changing_group = State()
     changing_proxy = State()
+    changing_instructions = State()
     choosing_automod = State()
