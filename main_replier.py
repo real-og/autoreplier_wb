@@ -1,8 +1,5 @@
-import requests
 import time
-import json
 import gpt_generator
-import config
 import bot_outer_interface
 import utils
 import keyboards as kb
@@ -11,6 +8,7 @@ import redis_db
 import traceback
 from datetime import datetime
 import texts
+import config_io
 
 
 
@@ -29,9 +27,9 @@ if __name__ == '__main__':
             # circling 2 shops via 2 tokens
             i += 1
             if i % 2:
-                auth = config.WB_TOKEN_OOO
+                auth = config_io.get_value('WB_TOKEN_OOO')
             else:
-                auth = config.WB_TOKEN_IP
+                auth = config_io.get_value('WB_TOKEN_IP')
             response_feedbacks = wb_api.get_feedbacks(auth)
 
             
@@ -48,9 +46,9 @@ if __name__ == '__main__':
                 message_to_send = utils.compose_message(feedback)
 
                 message_id = bot_outer_interface.send_text_message(message_to_send)
-                if auth == config.WB_TOKEN_OOO:
+                if auth == config_io.get_value('WB_TOKEN_OOO'):
                     account = 'OOO'
-                elif auth == config.WB_TOKEN_IP:
+                elif auth == config_io.get_value('WB_TOKEN_IP'):
                     account = 'IP'
 
                 reply_gpt = gpt_generator.get_reply(parsed_feedback)

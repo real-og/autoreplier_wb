@@ -1,6 +1,5 @@
 import time
 import httpx
-from config import PROXY, GPT_KEY, WB_TOKEN_OOO
 from openai import OpenAI
 
 
@@ -65,5 +64,3 @@ def check_wb(wb_token, timeout_s: float = 10.0):
         return False, getattr(getattr(e, "response", None), "status_code", None)
 
     
-if __name__ == '__main__':
-    print(check_wb(WB_TOKEN_OOO + 'f'))

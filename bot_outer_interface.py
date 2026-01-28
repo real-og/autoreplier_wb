@@ -1,15 +1,15 @@
 import asyncio
 from aiogram import Bot
-from config import BOT_TOKEN, GROUP_ID
 import keyboards as kb
+import config_io
 
 
-bot = Bot(BOT_TOKEN, parse_mode='HTML')
+bot = Bot(config_io.get_value('BOT_TOKEN'), parse_mode='HTML')
 
 # sending message form the script not telegram bot instance
 async def async_send_message(text, keyboard=None):
     try:
-        mes = await bot.send_message(GROUP_ID, text, reply_markup=keyboard)
+        mes = await bot.send_message(config_io.get_value('GROUP_ID'), text, reply_markup=keyboard)
         print(mes)
         s = await bot.get_session()
         await s.close()
@@ -27,7 +27,7 @@ def send_text_message(text, keyboard=None):
 # editing keyboard form the script not telegram bot instance
 async def async_edit_kb(message_id, keyboard=None):
     try:
-        mes = await bot.edit_message_reply_markup(GROUP_ID, message_id, reply_markup=keyboard)
+        mes = await bot.edit_message_reply_markup(config_io.get_value('GROUP_ID'), message_id, reply_markup=keyboard)
         print(mes)
         s = await bot.get_session()
         await s.close()

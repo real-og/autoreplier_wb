@@ -77,3 +77,12 @@ def compose_message(feedback: dict) -> str:
 
     parts += ["", f"ID: <i>{fb_id}</i>"]
     return "\n".join(parts)
+
+
+def short_tail(s: str, tail: int = 4) -> str:
+    if s is None:
+        return ""
+    s = str(s)
+    if len(s) <= tail:
+        return s
+    return "..." + s[-tail:]

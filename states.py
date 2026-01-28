@@ -2,5 +2,9 @@ from aiogram.dispatcher.filters.state import StatesGroup, State
 
 
 class State(StatesGroup):
-    changing_instructions = State()
+    changing_openai = State()
+    changing_wb_ip = State()
+    changing_wb_ooo = State()
+    changing_group = State()
+    changing_proxy = State()
     choosing_automod = State()

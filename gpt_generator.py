@@ -1,18 +1,17 @@
 import os
 import httpx
 from openai import OpenAI
-import config
 import json
-from settings import INSTRUCTIONS
+import config_io
 
 
 
 http_client = httpx.Client(
-    proxy=config.PROXY,         
+    proxy=config_io.get_value('PROXY'),         
     timeout=60.0,
 )
 
-client = OpenAI(api_key=config.GPT_KEY, http_client=http_client)
+client = OpenAI(api_key=config_io.get_value('GPT_KEY'), http_client=http_client)
 
 
 
@@ -31,7 +30,7 @@ def get_reply(payload: dict | str) -> str:
 
     resp = client.responses.create(
         model="gpt-5-mini",
-        instructions=INSTRUCTIONS,
+        instructions=config_io.get_value('INSTRUCTIONS'),
         input="Данные отзыва:\n" + payload,
         max_output_tokens=1000,
         text={
