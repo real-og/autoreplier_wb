@@ -1,6 +1,7 @@
 import time
 import httpx
 from config import PROXY, GPT_KEY, WB_TOKEN_OOO
+from openai import OpenAI
 
 
 PROXY_CHECK_URL = 'https://api.ipify.org?format=json'
@@ -21,31 +22,34 @@ def check_proxy(proxy: str, timeout_s: float = 10.0):
     
 
 
-def check_openai(proxy: str, api_key: str, timeout_s: float = 15.0):
+def check_openai_via_proxy(proxy: str, api_key: str, timeout_s: float = 20.0):
     """
-    403 - without proxy
-    401 - gpt token problem
-    None - запрос не дошел
+    - (True, status_code)  -> ok
+    - (False, status_code) -> 401 - no good openAI token, 403 - ip, 429 - too much requests or no money
+    - (False, None)        -> network/proxy problem
     """
+    http_client = httpx.Client(proxy=proxy, timeout=timeout_s)
+    client = OpenAI(api_key=api_key, http_client=http_client)
+
     try:
-        with httpx.Client(
-            proxy=proxy,
-            timeout=timeout_s,
-            headers={"Authorization": f"Bearer {api_key}"},
-        ) as c:
-            r = c.get(GPT_CHECK_URL)
-        return (200 <= r.status_code < 300), r.status_code
+        client.responses.create(
+            model="gpt-5-mini",
+            input="ping",
+            max_output_tokens=16,
+            store=False,
+        )
+        return True, 200
 
-    except httpx.HTTPStatusError as e:
-        # если где-то выше будет raise_for_status(), но здесь не обязателен
-        return False, e.response.status_code
+    except Exception as e:
+        code = getattr(e, "status_code", None)
+        print(e)
+        if code is None:
+            resp = getattr(e, "response", None)
+            code = getattr(resp, "status_code", None)
+        return False, code
 
-    except httpx.HTTPError as e:
-        resp = getattr(e, "response", None)
-        return False, (resp.status_code if resp is not None else None)
-
-    except Exception:
-        return False, None
+    finally:
+        http_client.close()
     
 
 def check_wb(wb_token, timeout_s: float = 10.0):

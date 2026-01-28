@@ -3,7 +3,6 @@ import httpx
 from openai import OpenAI
 import config
 import json
-from openai import OpenAI
 from settings import INSTRUCTIONS
 
 
