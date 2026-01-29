@@ -48,19 +48,32 @@ def compose_message(feedback: dict) -> str:
     photos_count = len(photos) if isinstance(photos, list) else 0
 
     answer = feedback.get("answer")
+
+    article_for_customer = pd.get('nmId')
+
     answered = "✅ Есть ответ" if answer else "❌ Нет ответа"
 
+    if int(rating) == 5:
+        symbol_for_rate = '✅'
+    elif int(rating) > 2:
+        symbol_for_rate = '⚠️'
+    else:
+        symbol_for_rate = '💀'
+
+
     parts = [ 
+        f"Оценка: <b>{rating}</b>{symbol_for_rate}", 
+        "",
         f"Время: <b>{created_str}</b>",
         "",
         f"Товар: <b>{product_name}</b>",
         "",
         f"Артикул продавца: <b>{supplier_article}</b>",
+        f"Карточка: <b>{article_for_customer}</b>",
         "",
         f"Покупатель: <b>{user}</b>",
         f"Фото: <b>{photos_count}</b>", 
         "",
-        f"Оценка: <b>{rating}</b>", 
         f"Теги: <b>{tags}</b>",   
         ""   
     ]
