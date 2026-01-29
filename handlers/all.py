@@ -12,6 +12,7 @@ import diagnostics
 import datetime
 from loader import dp, bot
 import config_io
+import utils
 
 
 
@@ -102,6 +103,10 @@ async def send_series(callback: types.CallbackQuery):
             item_to_ans = item
             break
 
+    if item_to_ans['account'] == 'OOO':
+        auth = config_io.get_value('WB_TOKEN_OOO')
+    elif item_to_ans['account'] == 'IP':
+        auth = config_io.get_value('WB_TOKEN_IP')
 
     if tapped == 'sent':
 
@@ -114,11 +119,6 @@ async def send_series(callback: types.CallbackQuery):
             await bot.answer_callback_query(callback.id, text='Ошибка при поиске отзыва')
             return
         
-
-        if item_to_ans['account'] == 'OOO':
-            auth = config_io.get_value('WB_TOKEN_OOO')
-        elif item_to_ans['account'] == 'IP':
-            auth = config_io.get_value('WB_TOKEN_IP')
 
         # already answered
         wb_feedback = wb_api.get_feedback_by_id(auth, item_to_ans['feedback_id'])
@@ -136,12 +136,13 @@ async def send_series(callback: types.CallbackQuery):
             await bot.edit_message_reply_markup(config_io.get_value('GROUP_ID'), message_id, reply_markup=kb.done_kb)
         except Exception as e:
             print('Ошибка при изменении кнопки')
-    else:
-        await bot.answer_callback_query(callback.id, text='Ошибка при поиске отзыва')
-
-
-    if tapped == 'regenerate':
-        print(item_to_ans)
+    elif tapped == 'regenerate':
+        await bot.answer_callback_query(callback.id, text='Подождите')
+        wb_feedback = wb_api.get_feedback_by_id(auth, item_to_ans['feedback_id']).json().get('data')
+        parsed_feedback = utils.parse_feedback(wb_feedback)
+        reply_gpt, total_used_tokens = gpt_generator.get_reply(parsed_feedback)
+        await bot.edit_message_text(reply_gpt + f'\n\n<i>Суммарно использовано {total_used_tokens}</i>', config_io.get_value('GROUP_ID'), message_id, reply_markup=kb.to_send_kb)
+        
 
     
     await bot.answer_callback_query(callback.id)
