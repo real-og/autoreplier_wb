@@ -22,8 +22,10 @@ if __name__ == '__main__':
     bot_outer_interface.send_text_message('Начали')
     i = 0
     while True:
+        
         try:
-
+            
+            redis_db.delete_old_items()
             # circling 2 shops via 2 tokens
             i += 1
             if i % 2:
