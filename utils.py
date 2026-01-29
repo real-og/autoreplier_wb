@@ -1,3 +1,7 @@
+from datetime import datetime, timezone
+
+
+# for cahtGPT
 def parse_feedback(feedback_item: dict):
     return {
         "userName": feedback_item.get("userName", ""),
@@ -12,8 +16,7 @@ def parse_feedback(feedback_item: dict):
     }
 
 
-from datetime import datetime, timezone
-
+# from wb to tg
 def compose_message(feedback: dict) -> str:
     pd = feedback.get("productDetails") or {}
 
@@ -22,7 +25,6 @@ def compose_message(feedback: dict) -> str:
     rating = feedback.get("productValuation", "-")
     created = feedback.get("createdDate")
 
-    # дата/время: "2026-01-01T09:48:44Z" -> "01.01.2026 09:48"
     created_str = "—"
     if created:
         try:
@@ -92,6 +94,7 @@ def compose_message(feedback: dict) -> str:
     return "\n".join(parts)
 
 
+# the last symbols with prefix ...
 def short_tail(s: str, tail: int = 4) -> str:
     if s is None:
         return ""

@@ -4,6 +4,7 @@ import time
 
 
 redis_client = redis.Redis(host="127.0.0.1", port=6379, decode_responses=True)
+
 key = "wb_feedbacks"
 automod_key = 'wb_automod_rates'
 
@@ -56,6 +57,7 @@ def get_selected_rates() -> list[int]:
         return [int(x) for x in arr] if isinstance(arr, list) else []
     except Exception:
         return []
+
 
 def set_selected_rates(arr: list[int]) -> None:
     redis_client.set(automod_key, json.dumps([int(x) for x in arr]))

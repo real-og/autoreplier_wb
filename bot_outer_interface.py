@@ -17,7 +17,6 @@ async def async_send_message(text, keyboard=None):
     except Exception as e:
         print(e)
 
-
 def send_text_message(text, keyboard=None):
     message_id = asyncio.run(async_send_message(text, keyboard))
     return message_id
@@ -34,7 +33,6 @@ async def async_edit_kb(message_id, keyboard=None):
         return message_id
     except Exception as e:
         print(e)
-
 
 def edit_kb(message_id, keyboard):
     asyncio.run(async_edit_kb(message_id, keyboard))

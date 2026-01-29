@@ -20,7 +20,6 @@ def check_proxy(proxy: str, timeout_s: float = 10.0):
         return None
     
 
-
 def check_openai_via_proxy(proxy: str, api_key: str, timeout_s: float = 20.0):
     """
     - (True, status_code)  -> ok

@@ -18,14 +18,17 @@ def get_automod_kb(selected: List[int]):
     kb.row(button_6)
     return kb
 
+
 to_send_kb = InlineKeyboardMarkup()
 button_1 = InlineKeyboardButton(text='Отправить ✉️', callback_data='sent')
 button_2 = InlineKeyboardButton(text='🔁', callback_data='regenerate')
 to_send_kb.row(button_1, button_2)
 
+
 done_kb = InlineKeyboardMarkup()
 button_1 = InlineKeyboardButton(text='Готово ✅', callback_data='done')
 done_kb.row(button_1)
+
 
 done_auto_kb = InlineKeyboardMarkup()
 button_1 = InlineKeyboardButton(text='Готово ✅🤖', callback_data='done')
@@ -34,13 +37,12 @@ done_auto_kb.row(button_1)
 
 error_kb = InlineKeyboardMarkup()
 button_1 = InlineKeyboardButton(text='Ошибка поиска ❗️', callback_data='error')
-done_auto_kb.row(button_1)
+error_kb.row(button_1)
+
 
 done_by_hand = InlineKeyboardMarkup()
 button_1 = InlineKeyboardButton(text='Уже отвечено на WB ⚠️', callback_data='warning')
 done_by_hand.row(button_1)
-
-
 
 
 cancel_kb = ReplyKeyboardMarkup([[buttons.cancel]],

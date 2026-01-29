@@ -5,14 +5,12 @@ import json
 import config_io
 
 
-
 http_client = httpx.Client(
     proxy=config_io.get_value('PROXY'),         
     timeout=60.0,
 )
 
 client = OpenAI(api_key=config_io.get_value('GPT_KEY'), http_client=http_client)
-
 
 
 SCHEMA = {
@@ -23,6 +21,7 @@ SCHEMA = {
     "required": ["answer"],
     "additionalProperties": False
 }
+
 
 def get_reply(payload: dict | str) -> str:
     if isinstance(payload, dict):
@@ -56,7 +55,6 @@ def get_reply(payload: dict | str) -> str:
     
     data = json.loads(resp.output_text)
     return data["answer"].strip(), total_used
-
 
 
 if __name__ == '__main__':
