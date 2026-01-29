@@ -11,7 +11,8 @@ import texts
 import config_io
 
 
-FEEDBACK_TIMEOUT = 5
+DISABLE_TIMEOUT = 5
+FEEDBACK_TIMEOUT = 20
 LOCAL_TIMEOUT = 3
 EXCEPTION_TIMEOUT = 120
 
@@ -20,7 +21,13 @@ if __name__ == '__main__':
     bot_outer_interface.send_text_message('Начали')
     i = 0
     while True:
+
         try:
+            is_enable = config_io.get_value('ON')
+            if not is_enable:
+                time.sleep(DISABLE_TIMEOUT)
+                continue
+
             redis_db.delete_old_items()
             
             # circling 2 shops via 2 tokens
