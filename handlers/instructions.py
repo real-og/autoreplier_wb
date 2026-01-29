@@ -13,7 +13,7 @@ from loader import dp
 @dp.message_handler(commands=['get_instructions'], state="*")
 async def send_welcome(message: types.Message):
     to_answer = f"""<b>Нынешние инструкции для нейросети</b>\n
-{utils.short_tail(config_io.get_value('INSTRUCTIONS'))}\n"""
+{config_io.get_value('INSTRUCTIONS')}\n"""
     await message.answer(to_answer)
 
 

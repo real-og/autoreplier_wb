@@ -95,7 +95,7 @@ def compose_message(feedback: dict) -> str:
 
 
 # the last symbols with prefix ...
-def short_tail(s: str, tail: int = 4) -> str:
+def short_tail(s: str, tail: int = 6) -> str:
     if s is None:
         return ""
     s = str(s)

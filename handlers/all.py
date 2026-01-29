@@ -36,6 +36,9 @@ async def send_welcome(message: types.Message):
 @dp.message_handler(lambda message: str(message.from_user.id) in config_io.get_value('ADMINS'), commands=['test'], state="*")
 async def send_welcome(message: types.Message):
     feedback_to_test = message.get_args()
+    print(feedback_to_test)
+    if not feedback_to_test:
+        await message.answer('Пустой отзыв. Используйте как /test + отзыв в одном сообщении')
     try:
         answer, total_tokens_used = gpt_generator.get_reply(feedback_to_test)
     except Exception as e:
@@ -83,10 +86,6 @@ async def send_series(callback: types.CallbackQuery, state: FSMContext):
 async def send_welcome(message: types.Message):
     await message.answer_document(types.InputFile("log.txt"))
 
-@dp.message_handler(lambda message: str(message.from_user.id) in config_io.get_value('ADMINS'), commands=['help'], state="*")
-async def send_welcome(message: types.Message):
-    await message.answer('Инструкция скоро')
-    
 
 
 @dp.callback_query_handler(state='*')
