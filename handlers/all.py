@@ -16,7 +16,7 @@ import utils
 
 
 
-@dp.message_handler(commands=['start'], state="*")
+@dp.message_handler(lambda message: str(message.from_user.id) in config_io.get_value('ADMINS'), commands=['start'], state="*")
 async def send_welcome(message: types.Message):
     await message.answer(texts.back_to_menu)
     print(message)
@@ -33,7 +33,7 @@ async def send_welcome(message: types.Message):
 
 
     
-@dp.message_handler(commands=['test'], state="*")
+@dp.message_handler(lambda message: str(message.from_user.id) in config_io.get_value('ADMINS'), commands=['test'], state="*")
 async def send_welcome(message: types.Message):
     feedback_to_test = message.get_args()
     try:
@@ -47,14 +47,14 @@ async def send_welcome(message: types.Message):
     await message.answer(answer + f'\n\n<i>Суммарно использовано {total_tokens_used}</i>')
 
 
-@dp.message_handler(commands=['set_automod'], state="*")
+@dp.message_handler(lambda message: str(message.from_user.id) in config_io.get_value('ADMINS'), commands=['set_automod'], state="*")
 async def send_welcome(message: types.Message):
     selected_rates = redis_db.get_selected_rates()
     await message.answer(texts.automod_changing, reply_markup=kb.get_automod_kb(selected_rates))
     await State.choosing_automod.set()
 
 
-@dp.callback_query_handler(state=State.choosing_automod)
+@dp.callback_query_handler(lambda message: str(message.from_user.id) in config_io.get_value('ADMINS'), state=State.choosing_automod)
 async def send_series(callback: types.CallbackQuery, state: FSMContext):
     if callback.data == 'menu':
         await callback.message.answer(texts.back_to_menu, reply_markup=ReplyKeyboardRemove())
@@ -79,11 +79,11 @@ async def send_series(callback: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback.id)
     
 
-@dp.message_handler(commands=['logs'], state="*")
+@dp.message_handler(lambda message: str(message.from_user.id) in config_io.get_value('ADMINS'), commands=['logs'], state="*")
 async def send_welcome(message: types.Message):
     await message.answer_document(types.InputFile("log.txt"))
 
-@dp.message_handler(commands=['help'], state="*")
+@dp.message_handler(lambda message: str(message.from_user.id) in config_io.get_value('ADMINS'), commands=['help'], state="*")
 async def send_welcome(message: types.Message):
     await message.answer('Инструкция скоро')
     
