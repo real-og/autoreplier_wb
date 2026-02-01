@@ -132,7 +132,8 @@ async def send_series(callback: types.CallbackQuery):
             return
         
 
-        wb_api.answer_feedback_mock(auth, item_to_ans['feedback_id'], callback.message.text)
+        res = wb_api.answer_feedback(auth, item_to_ans['feedback_id'], callback.message.text)
+        print(res)
         try:
             await bot.edit_message_reply_markup(config_io.get_value('GROUP_ID'), message_id, reply_markup=kb.done_kb)
         except Exception as e:

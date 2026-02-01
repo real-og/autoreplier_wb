@@ -33,6 +33,6 @@ def answer_feedback(auth, id: str, text: str):
     return response.status_code
 
 
-def answer_feedback_mock(auth, id: str, text: str):
-    print('mock answer')
-    return 204
+# def answer_feedback_mock(auth, id: str, text: str):
+#     print('mock answer')
+#     return 204

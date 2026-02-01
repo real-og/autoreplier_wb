@@ -80,7 +80,7 @@ if __name__ == '__main__':
                 
                 rates_to_auto_reply = redis_db.get_selected_rates()
                 if (parsed_feedback['rating'] is not None) and int(parsed_feedback['rating']) in rates_to_auto_reply:
-                    wb_api.answer_feedback_mock(auth, feedback['id'], reply_gpt)
+                    wb_api.answer_feedback(auth, feedback['id'], reply_gpt)
                     bot_outer_interface.edit_kb(reply_id, kb.done_auto_kb)
                 
 
