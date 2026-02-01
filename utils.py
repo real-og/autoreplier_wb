@@ -102,3 +102,14 @@ def short_tail(s: str, tail: int = 6) -> str:
     if len(s) <= tail:
         return s
     return "..." + s[-tail:]
+
+
+import re
+
+def strip_usage_tail(text: str) -> str:
+    return re.sub(
+        r'\n*\s*(?:всего|суммарно)\s+использовано.*$',
+        '',
+        text,
+        flags=re.IGNORECASE | re.DOTALL
+    ).rstrip()

@@ -1,4 +1,5 @@
 import requests
+import utils
 
 
 BASE_URL = 'https://feedbacks-api.wildberries.ru/'
@@ -24,6 +25,7 @@ def get_feedback_by_id(auth, id):
 
 # auth - wb token; id - feedback-id from wb
 def answer_feedback(auth, id: str, text: str):
+    text  = utils.strip_usage_tail(text)
     url = 'api/v1/feedbacks/answer'
     headers = {'Authorization': auth,
                'Content-Type': 'application/json'}
