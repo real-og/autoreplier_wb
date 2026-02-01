@@ -1,4 +1,5 @@
 from aiogram import types
+import random
 from aiogram.dispatcher import FSMContext
 from aiogram.types import ReplyKeyboardRemove
 import traceback
@@ -13,7 +14,11 @@ import datetime
 from loader import dp, bot
 import config_io
 import utils
-
+import sys
+if sys.argv[1] == "btl":
+    import google_sheets_btl as google_sheets
+elif sys.argv[1] == "rastr":
+    import google_sheets_rastr as google_sheets
 
 
 @dp.message_handler(lambda message: str(message.from_user.id) in config_io.get_value('ADMINS'), commands=['start'], state="*")
@@ -36,7 +41,6 @@ async def send_welcome(message: types.Message):
 @dp.message_handler(lambda message: str(message.from_user.id) in config_io.get_value('ADMINS'), commands=['test'], state="*")
 async def send_welcome(message: types.Message):
     feedback_to_test = message.get_args()
-    print(feedback_to_test)
     if not feedback_to_test:
         await message.answer('Пустой отзыв. Используйте как /test + отзыв в одном сообщении')
     try:
@@ -92,8 +96,6 @@ async def send_welcome(message: types.Message):
 async def send_series(callback: types.CallbackQuery):
     tapped = callback.data
     message_id = callback.message.message_id
-    print(tapped)
-    print(message_id)
 
     all = redis_db.get_all_redis()
     item_to_ans = None
@@ -139,11 +141,19 @@ async def send_series(callback: types.CallbackQuery):
         await bot.answer_callback_query(callback.id, text='Подождите')
         wb_feedback = wb_api.get_feedback_by_id(auth, item_to_ans['feedback_id']).json().get('data')
         parsed_feedback = utils.parse_feedback(wb_feedback)
-        reply_gpt, total_used_tokens = gpt_generator.get_reply(parsed_feedback)
-        await bot.edit_message_text(reply_gpt + f'\n\n<i>Суммарно использовано {total_used_tokens}</i>', config_io.get_value('GROUP_ID'), message_id, reply_markup=kb.to_send_kb)
-        
 
-    
-    await bot.answer_callback_query(callback.id)
+        if sys.argv[1] == "btl":
+            recs = google_sheets.get_recommendations(wb_feedback['productDetails']['supplierArticle'])
+        elif sys.argv[1] == "rastr":
+            recs = google_sheets.get_recommendations(wb_feedback['productDetails']['nmId'])
+        if recs:
+            recs = random.choice(recs)
+        reply_gpt, total_used_tokens = gpt_generator.get_reply(parsed_feedback, recs)
+
+        await bot.edit_message_text(reply_gpt + f'\n\n<i>Суммарно использовано {total_used_tokens}</i>', config_io.get_value('GROUP_ID'), message_id, reply_markup=kb.to_send_kb)
+    try:
+        await bot.answer_callback_query(callback.id)
+    except Exception as e:
+        print(e)
 
 

@@ -93,13 +93,13 @@ async def send_welcome(message: types.Message, state: FSMContext):
     await state.reset_state(with_data=False)
 
 
-@dp.message_handler(lambda message: str(message.from_user.id) in config_io.get_value('ADMINS'),commands=['set_wb_ip'], state="*")
+@dp.message_handler(lambda message: str(message.from_user.id) in config_io.get_value('ADMINS'), commands=['set_wb_ip'], state="*")
 async def send_welcome(message: types.Message):
     await message.answer(f"Токен вб ИП: {utils.short_tail(config_io.get_value('WB_TOKEN_IP'))}")
     await message.answer(texts.change_setting, reply_markup=kb.cancel_kb)
     await State.changing_wb_ip.set()
 
-@dp.message_handler(lambda message: str(message.from_user.id) in config_io.get_value('ADMINS'),state=State.changing_wb_ip)
+@dp.message_handler(lambda message: str(message.from_user.id) in config_io.get_value('ADMINS'), state=State.changing_wb_ip)
 async def send_welcome(message: types.Message, state: FSMContext):
     if message.text.lower().strip() == buttons.cancel.lower().strip():
         await message.answer(texts.instructions_change_canceled)

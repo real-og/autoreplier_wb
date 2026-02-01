@@ -35,7 +35,4 @@ def answer_feedback(auth, id: str, text: str):
 
 def answer_feedback_mock(auth, id: str, text: str):
     print('mock answer')
-    print(auth)
-    print(id)
-    print(text)
     return 204

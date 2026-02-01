@@ -8,4 +8,5 @@ class State(StatesGroup):
     changing_group = State()
     changing_proxy = State()
     changing_instructions = State()
+    changing_rec_instructions = State()
     choosing_automod = State()

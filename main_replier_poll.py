@@ -1,6 +1,7 @@
 import time
 import gpt_generator
 import bot_outer_interface
+import random
 import utils
 import keyboards as kb
 import wb_api
@@ -9,11 +10,16 @@ import traceback
 from datetime import datetime
 import texts
 import config_io
+import sys
+if sys.argv[1] == "btl":
+    import google_sheets_btl as google_sheets
+elif sys.argv[1] == "rastr":
+    import google_sheets_rastr as google_sheets
 
 
 DISABLE_TIMEOUT = 5
-FEEDBACK_TIMEOUT = 20
-LOCAL_TIMEOUT = 3
+FEEDBACK_TIMEOUT = 30
+LOCAL_TIMEOUT = 10
 EXCEPTION_TIMEOUT = 120
 
 
@@ -57,7 +63,13 @@ if __name__ == '__main__':
                 elif auth == config_io.get_value('WB_TOKEN_IP'):
                     account = 'IP'
 
-                reply_gpt, total_used_tokens = gpt_generator.get_reply(parsed_feedback)
+                if sys.argv[1] == "btl":
+                    recs = google_sheets.get_recommendations(feedback['productDetails']['supplierArticle'])
+                elif sys.argv[1] == "rastr":
+                    recs = google_sheets.get_recommendations(feedback['productDetails']['nmId'])
+                if recs:
+                    recs = random.choice(recs)
+                reply_gpt, total_used_tokens = gpt_generator.get_reply(parsed_feedback, recs)
                 reply_id = bot_outer_interface.send_text_message(reply_gpt + f'\n\n<i>Суммарно использовано {total_used_tokens}</i>', kb.to_send_kb)
 
                 redis_db.add_redis({'timestamp': int(time.time()),

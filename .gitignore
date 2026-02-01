@@ -7,4 +7,5 @@ test.py
 nohup.out
 readme_private.txt
 cfg_*.tmp
-config.json.lockы
+config.json.lock
+key.json

@@ -23,15 +23,19 @@ SCHEMA = {
 }
 
 
-def get_reply(payload: dict | str) -> str:
+def get_reply(payload: dict | str, recommended = None) -> str:
     if isinstance(payload, dict):
         payload = json.dumps(payload, ensure_ascii=False)
 
+    instructions = config_io.get_value('INSTRUCTIONS')
+    if recommended:
+        instructions += f" {config_io.get_value('RECOMMEND_INSTRUCTIONS')} {recommended}"
+
     resp = client.responses.create(
         model="gpt-5-mini",
-        instructions=config_io.get_value('INSTRUCTIONS'),
+        instructions=instructions,
         input="Данные отзыва:\n" + payload,
-        max_output_tokens=1000,
+        max_output_tokens=2000,
         text={
             "format": {
                 "type": "json_schema",
