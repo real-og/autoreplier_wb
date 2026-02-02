@@ -42,7 +42,7 @@ def get_recommendations(article):
     data = fetch_google_sheet_rows()
     recommendations = []
     for row in data:
-        if str(row[0]) == str(article):
+        if (len(row) > 0) and str(row[0]) == str(article):
             for item in row[1:]:
                 if item:
                     recommendations.append(item)
