@@ -113,3 +113,25 @@ def strip_usage_tail(text: str) -> str:
         text,
         flags=re.IGNORECASE | re.DOTALL
     ).rstrip()
+
+
+def is_valid_proxy(proxy: str) -> bool:
+    pattern = re.compile(
+        r'^http://'                      # протокол
+        r'([a-zA-Z0-9._-]+)'              # логин
+        r':'                              
+        r'([a-zA-Z0-9._-]+)'              # пароль
+        r'@'
+        r'('
+            r'(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.'  # 1 октет
+            r'(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.'  # 2
+            r'(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.'  # 3
+            r'(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)'    # 4
+        r')'
+        r':'
+        r'([1-9]\d{0,4})$'                # порт
+    )
+
+    match = pattern.match(proxy)
+    if not match:
+        return False

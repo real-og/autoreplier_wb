@@ -69,8 +69,14 @@ async def send_welcome(message: types.Message, state: FSMContext):
         await message.answer(texts.instructions_change_canceled)
         await message.answer(texts.back_to_menu, reply_markup=ReplyKeyboardRemove())
     elif message.text:
-        config_io.update_key('PROXY', message.text.strip())
-        await message.answer(texts.success_instruction_change)
+        proxy_to_set = message.text
+        if not 'http://' in message.text:
+            proxy_to_set = 'http://' + message.text
+        if utils.is_valid_proxy(proxy_to_set):
+            config_io.update_key('PROXY', message.text.strip())
+            await message.answer(texts.success_instruction_change)
+        else:
+            await message.answer('ошибка, прокси должны быть вида http://логин:пароль@ip:порт')
         await message.answer(texts.back_to_menu, reply_markup=ReplyKeyboardRemove())
     await state.reset_state(with_data=False)
 
