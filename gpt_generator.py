@@ -35,7 +35,7 @@ def get_reply(payload: dict | str, recommended = None) -> str:
         model="gpt-5-mini",
         instructions=instructions,
         input="Данные отзыва:\n" + payload,
-        max_output_tokens=2000,
+        max_output_tokens=3100,
         text={
             "format": {
                 "type": "json_schema",
