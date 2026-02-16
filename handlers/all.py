@@ -88,7 +88,7 @@ async def send_series(callback: types.CallbackQuery, state: FSMContext):
 
 @dp.message_handler(lambda message: str(message.from_user.id) in config_io.get_value('ADMINS'), commands=['logs'], state="*")
 async def send_welcome(message: types.Message):
-    await message.answer_document(types.InputFile("log.txt"))
+    await message.answer_document(types.InputFile("nohup.out"))
 
 
 
